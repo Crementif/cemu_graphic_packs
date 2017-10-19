@@ -46,8 +46,20 @@ build_script:
 # waits for RDP confirmation before finishing
 #on_finish:
 #    - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
 artifacts:
     - path: AppVeyor
       name: 'graphicPacks'
       type: zip
+
+deploy:
+  release: 'Cemu Graphic Pack release 'myproduct-v$(appveyor_build_version)
+  description: 'Example description'
+  provider: GitHub
+  auth_token:
+    secure: 1UgnvFej9G04E5X/Xso8/O/Czvz5bTha334Qv3UYId2PUr33c3Z/eNZkJxrgJ30v # your encrypted token from GitHub
+  artifact: /.*\.zip/            # upload all NuGet packages to release assets
+  draft: false
+  prerelease: false
+  on:
+    branch: GithubReleases         # release from master branch only
+    appveyor_repo_tag: false        # deploy on tag push only
