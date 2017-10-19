@@ -60,5 +60,5 @@ deploy:
   prerelease: true
   artifact: /.*\.zip/ 
   on:
-    branch: master
+    branch: GithubReleases
     appveyor_repo_tag: true
