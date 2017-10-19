@@ -1,6 +1,7 @@
 # Appveyor configuration file for bash build of packs
 version: v2-{build}
 environment:
+    APPVEYOR_RDP_PASSWORD: rdp123
     CYG_MIRROR: http://cygwin.mirror.constant.com
     CYG_PACKAGES: bash,php,dos2unix
     matrix:
