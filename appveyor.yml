@@ -61,4 +61,3 @@ deploy:
   artifact: /.*\.zip/ 
   on:
     branch: GithubReleases
-    appveyor_repo_tag: true
