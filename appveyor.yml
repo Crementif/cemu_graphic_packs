@@ -52,14 +52,13 @@ artifacts:
       type: zip
 
 deploy:
-  release: 'Cemu Graphic Pack release 'myproduct-v$(appveyor_build_version)
-  description: 'Example description'
+  release: "Cemu Graphic Packs - Version 2-${build}"
+  description: "Example description"
   provider: GitHub
   auth_token:
-    secure: 1UgnvFej9G04E5X/Xso8/O/Czvz5bTha334Qv3UYId2PUr33c3Z/eNZkJxrgJ30v # your encrypted token from GitHub
-  artifact: /.*\.zip/            # upload all NuGet packages to release assets
-  draft: false
-  prerelease: false
+    secure: tSYxyXeLtE0f6ZsXsGaHZEAw5Nj4TcgN/rx8uCfPnRjcE55OLAVn/8WXEiovNXLt
+  prerelease: true
+  artifact: /.*\.zip/ 
   on:
-    branch: GithubReleases         # release from master branch only
-    appveyor_repo_tag: false        # deploy on tag push only
+    branch: master
+    appveyor_repo_tag: true
