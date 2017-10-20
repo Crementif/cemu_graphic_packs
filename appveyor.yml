@@ -64,5 +64,5 @@ deploy:
     # Makes it so that it overwrites the previous files.
     force_update: true
     artifact: /.*\.zip/
-    on:
-      branch: master
+ #   on:
+ #     branch: master
