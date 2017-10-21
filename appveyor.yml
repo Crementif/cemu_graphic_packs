@@ -33,7 +33,7 @@ init:
 
 # Install needed build dependencies
 install:
-    - ps: $env:CommitTimestamp=Get-Date.ToUniversalTime() # Readable timestamp
+    - ps: $env:CommitTimestamp=[System.DateTime]::UtcNow # Readable timestamp
     - ps: if (Test-Path Env:\CYG_ROOT) { Start-FileDownload "http://cygwin.com/$env:CYG_SETUP" -FileName "cygsetup.exe" -Timeout 30000 }
     - ps: if ((Get-Content "cygsetup.exe") -eq $Null) { Copy-Item "$env:CYG_SETUP" -Destination "cygsetup.exe" -Force } else { Copy-Item "cygsetup.exe" -Destination "$env:CYG_SETUP" -Force }
     # Quiet-mode isn't really working but this does work.
