@@ -34,7 +34,7 @@ init:
 
 # Install needed build dependencies
 install:
-    - if defined appveyor_repo_commit_message_extended (set CommitDescription=%appveyor_repo_commit_message_extended%) else (set CommitDescription="No description was added to this commit")
+    - if defined appveyor_repo_commit_message_extended (set CommitDescription=%appveyor_repo_commit_message_extended%)
     - ps: $env:CommitTimestamp=[System.DateTime]::UtcNow # Readable timestamp
     - ps: if (Test-Path Env:\CYG_ROOT) { Start-FileDownload "http://cygwin.com/$env:CYG_SETUP" -FileName "cygsetup.exe" -Timeout 30000 }
     - ps: if ((Get-Content "cygsetup.exe") -eq $Null) { Copy-Item "$env:CYG_SETUP" -Destination "cygsetup.exe" -Force } else { Copy-Item "cygsetup.exe" -Destination "$env:CYG_SETUP" -Force }
