@@ -3,6 +3,7 @@ version: v2-{build}
 environment:
     # It's prefered to have the GithubAuthToken (encrypted) set in the UI. Follow this guide for the instructions https://www.appveyor.com/docs/deployment/github/#provider-settings.
     CommitTimestamp: 0
+    CommitDescription: "No description was given in this commit"
     CYG_MIRROR: http://cygwin.mirror.constant.com
     CYG_PACKAGES: bash,php,dos2unix
     matrix:
@@ -33,6 +34,7 @@ init:
 
 # Install needed build dependencies
 install:
+    - if defined appveyor_repo_commit_message_extended (set CommitDescription=%appveyor_repo_commit_message_extended%)
     - ps: $env:CommitTimestamp=[System.DateTime]::UtcNow # Readable timestamp
     - ps: if (Test-Path Env:\CYG_ROOT) { Start-FileDownload "http://cygwin.com/$env:CYG_SETUP" -FileName "cygsetup.exe" -Timeout 30000 }
     - ps: if ((Get-Content "cygsetup.exe") -eq $Null) { Copy-Item "$env:CYG_SETUP" -Destination "cygsetup.exe" -Force } else { Copy-Item "cygsetup.exe" -Destination "$env:CYG_SETUP" -Force }
