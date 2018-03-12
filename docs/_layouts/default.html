@@ -172,6 +172,9 @@ function interpreter(resHeight, resWidth, fileUrl) {
 	var fileFetches = [];
 	var interpretedFiles = [];
 function interpretGraphicPack(folderName, resHeight, resWidth) {
+	zip = new JSZip();
+	filefetches = [];
+	interpretedFiles = [];
 	fetch("https://api.github.com/repos/slashiee/cemu_graphic_packs/git/trees/master:Source?recursive=1").then(gitRes => gitRes.json()).then(gitJson => {
 		for(i=0; i<gitJson.tree.length; i++) {
 			currFolder = gitJson.tree[i].path.split("/");
@@ -193,8 +196,11 @@ function fetchFile(fetchPath) {
     	for(line = 0; line < lines.length; line++){
     		if (lines[line].startsWith("name =")) {
 				newLi = document.createElement('li');
-				newLi.innerText=lines[line].split(' - ')[0].split('name = "')[1];
-				newLi.onclick = function(){interpretGraphicPack(fetchPath.split("/")[0], document.getElementById("heightInput").value, document.getElementById("widthInput").value);};
+				newLink = document.createElement('a');
+				newLink.href=`javascript:interpretGraphicPack(${fetchPath.split("/")[0]},${document.getElementById("heightInput").value},${document.getElementById("widthInput").value});`;
+				newLinkText = document.createTextNode(lines[line].split(' - ')[0].split('name = "')[1]);
+				newLink.appendChild(newLinkText);
+				newLi.appendChild(newLink);
 				document.getElementsByTagName("ul")[0].appendChild(newLi);
 				break;
         	}
