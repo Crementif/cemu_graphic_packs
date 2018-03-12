@@ -199,7 +199,7 @@ function fetchFile(fetchPath) {
     		if (lines[line].startsWith("name =")) {
 				newLi = document.createElement('li');
 				newLink = document.createElement('a');
-				newLink.href=`javascript:interpretGraphicPack(${fetchPath.split("/")[0]});`;
+				newLink.href=`javascript:interpretGraphicPack("${fetchPath.split("/")[0]}");`;
 				newLinkText = document.createTextNode(lines[line].split(' - ')[0].split('name = "')[1]);
 				newLink.appendChild(newLinkText);
 				newLi.appendChild(newLink);
