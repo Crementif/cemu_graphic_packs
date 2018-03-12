@@ -13,7 +13,8 @@ For other games see ['I need help'](#i-need-help).
 ##### If you want Graphic Packs for < Cemu 1.8.0 you need to use legacy packs, which you can download [here](https://github.com/slashiee/cemu_graphic_packs/releases/download/1/graphicPacks.zip).
 
 ### **Games with Graphic Packs**
-
+<input type="number" id="heightInput"> Height
+<input type="number" id="widthInput"> Width
 - [Adventure Time: Explore the Dungeon Because I DON'T KNOW](http://compat.cemu.info/wiki/Adventure_Time:_Explore_the_Dungeon_Because_I_Don't_Know!)
 - [Adventure Time: Finn And Jake Investigations](http://compat.cemu.info/wiki/Adventure_Time:_Finn_And_Jake_Investigations)
 - [Aqua TV](http://compat.cemu.info/wiki/Aqua_TV)
