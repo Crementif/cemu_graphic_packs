@@ -90,7 +90,7 @@
 				for (i = 0; i < resJson.tree.length; i++) {
 					if (resJson.tree[i].type=="blob" && resJson.tree[i].path.split("/").pop() == "rules.txt") { // Provide alternative content as placeholder
 						fetch("https://cdn.rawgit.com/slashiee/cemu_graphic_packs/master/Source/"+resJson.tree[i].path, {cache:'force-cache'}).then(response => response.text()).then(out => {
-							lines = resJson.split('\n');
+							lines = out.split('\n');
     						for(line = 0; line < lines.length; line++){
       							if (lines[line].startsWith("name =")) {
 									gamesList.innerHTML+="<li>"+lines[line].split(' - ')[0].split('name = "')[1]+"</li>";
