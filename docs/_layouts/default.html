@@ -83,24 +83,134 @@
           document.getElementById("credits").innerHTML=creditsText;
         })
         </script>
-		<script>
-			fetch("https://api.github.com/repos/slashiee/cemu_graphic_packs/git/trees/master:Source?recursive=1", {cache:'force-cache'}).then(response => response.json()).then(resJson => {
-				var gamesList = document.getElementsByTagName("ul")[0];
-				gamesList.innerHTML="";
-				for (i = 0; i < resJson.tree.length; i++) {
-					if (resJson.tree[i].type=="blob" && resJson.tree[i].path.split("/").pop() == "rules.txt") { // Provide alternative content as placeholder
-						fetch("https://cdn.rawgit.com/slashiee/cemu_graphic_packs/master/Source/"+resJson.tree[i].path, {cache:'force-cache'}).then(response => response.text()).then(out => {
-							lines = out.split('\n');
-    						for(line = 0; line < lines.length; line++){
-      							if (lines[line].startsWith("name =")) {
-									gamesList.innerHTML+="<li>"+lines[line].split(' - ')[0].split('name = "')[1]+"</li>";
-									break;
-                				}
-    						}
-            			});
+	<script>
+function interpreter(resHeight, resWidth, fileUrl) {
+	fileFetches.push(fetch(fileUrl).then(res => res.text()).then(resText => {
+		function calculateArgs(sum, interpreterVariables) {
+			if (sum.includes("*")) operator = "*";
+			else if (sum.includes("/")) operator = "/";
+			else if (sum.includes("+")) operator = "+";
+			else if (sum.includes("-")) operator = "-";
+			else console.warn(`Unknown operator in sum '${sum}'`);
+			
+			argList = sum.split(operator);
+			if (typeof argList[0] === "string") if (argList[0].trim().startsWith("(float)")) argList[0] = argList[0].substr(8); // Compatibility with some patches that use this
+			if (typeof argList[1] === "string") if (argList[1].trim().startsWith("(float)")) argList[1] = argList[1].substr(8);
+			if (argList[0].trim().startsWith("$")) argList[0] = interpreterVariables[argList[0].trim()];
+			if (argList[1].trim().startsWith("$")) argList[1] = interpreterVariables[argList[1].trim()];
+			
+			if (argList.length !== 2) console.warn(`Interpreter can't support something other then 2 argumented calculations: The sum was ${sum}.`);
+			if (operator === "*") return parseFloat(argList[0]) * parseFloat(argList[1]);
+			if (operator === "/") return parseFloat(argList[0]) / parseFloat(argList[1]);
+			if (operator === "+") return parseFloat(argList[0]) + parseFloat(argList[1]);
+			if (operator === "-") return parseFloat(argList[0]) - parseFloat(argList[1]);
+		}
+		textLines = resText.split("\n");
+		newFile = [];
+		interpreterVariables = {
+			"$argv[1]": resHeight,
+			"$argv[2]": resWidth
+		};
+		phpMultiLineMode = false;
+		for(i=0; i<textLines.length; i++) {
+			if (textLines[i].includes("<?php")) phpMultiLineMode = true;
+			if (textLines[i].includes("?>") && phpMultiLineMode) {
+				phpMultiLineMode = false;
+				continue;
+        	}
+			if (phpMultiLineMode) {
+				if (textLines[i].includes(" = ")) { // Variable assignment
+					varAssign = textLines[i].split("=");
+					varAssign[1] = varAssign[1].slice(0, varAssign[1].indexOf(";"));
+					if (varAssign[1].trim().startsWith("always_decimal_format(")) {
+						interpreterVariables[varAssign[0].trim()] = calculateArgs(varAssign[1].substr(23), interpreterVariables);
+						console.debug(`Solved sum from ${varAssign[1]} to ${interpreterVariables[varAssign[0].trim()]}`);
+					}
+					else if (varAssign[1].trim().startsWith("number_format(")) {
+						// TODO: Non hacky interpreter-ish way
+						console.log("Current aspect is "+interpreterVariables["$aspect"]);
+						interpreterVariables[varAssign[0].trim()] = Math.round(interpreterVariables["$aspect"]*1000)/1000; // 3 decimals
+					}
+					else if (varAssign[1].trim().startsWith("get_title(")) interpreterVariables[varAssign[0].trim()] = `${resHeight}x${resWidth} using JS interpreter`;
+					else if (varAssign[1].trim().startsWith("$") && !varAssign[1].trim().includes(" ")) { // Direct Assignment without a sum
+						console.debug(`Directly assigning ${varAssign[1].trim()} to ${varAssign[0].trim()}.`);
+						interpreterVariables[varAssign[0].trim()] = interpreterVariables[varAssign[1].trim()];
+					}
+					else if (varAssign[1].includes("*") || varAssign[1].includes("/") || varAssign[1].includes("+") || varAssign[1].includes("-")) {
+						interpreterVariables[varAssign[0].trim()] = calculateArgs(varAssign[1], interpreterVariables);
 					}
 				}
+				continue;
+            }
+			newLine = "";
+			if (!textLines[i].includes("<?=")) {
+				newFile.push(textLines[i].trim());
+        	}
+			else {
+				phpStartIndex = textLines[i].indexOf("<?=");
+				phpEndIndex = textLines[i].indexOf("?>");
+				phpCode = textLines[i].slice(phpStartIndex+3, phpEndIndex);
+				interpretedLine = [textLines[i].substr(0, phpStartIndex), undefined, textLines[i].slice(phpEndIndex+2)];
+				if (phpCode.startsWith("round(")) {
+					phpArgStartIndex = phpCode.indexOf("(")+1;
+					phpArgEndIndex = phpCode.indexOf(")", phpArgStartIndex);
+					sum = phpCode.slice(phpArgStartIndex, phpArgEndIndex);
+					interpretedLine[1] = Math.round(calculateArgs(sum, interpreterVariables));
+				}
+				else if (phpCode.trim().startsWith("$") && !phpCode.trim().includes(" ")) interpretedLine[1] = interpreterVariables[phpCode.trim()]; // Variable access
+				newLine = interpretedLine.join("");
+				console.debug(`Interpreted ${textLines[i].trim()} to ${newLine.trim()}.`);
+			}
+			newFile.push(newLine.trim());
+		}
+		console.debug(`At the end of the file, these variables were interpreted: ${JSON.stringify(interpreterVariables)}.`);
+		zip.file(fileUrl.split("/")[8], newFile.join("\n").replace(/[\r\n]+/g, '\n'));
+	}));
+}
+
+	var zip = new JSZip();
+	var fileFetches = [];
+	var interpretedFiles = [];
+function interpretGraphicPack(folderName, resHeight, resWidth) {
+	fetch("https://api.github.com/repos/slashiee/cemu_graphic_packs/git/trees/master:Source?recursive=1").then(gitRes => gitRes.json()).then(gitJson => {
+		for(i=0; i<gitJson.tree.length; i++) {
+			currFolder = gitJson.tree[i].path.split("/");
+			if (currFolder[0] === folderName && currFolder[1] !== undefined) {
+				interpreter(resHeight, resWidth, "https://raw.githubusercontent.com/slashiee/cemu_graphic_packs/master/Source/"+gitJson.tree[i].path);
+			}
+		}
+		Promise.all(fileFetches).then(files => {
+			zip.generateAsync({type:"blob"}).then(content => {
+				saveAs(content, folderName+"-"+resHeight+"x"+resWidth+"-interpreted.zip");
 			});
+		})
+	})
+}
+
+function fetchFile(fetchPath) {
+	fetch("https://cdn.rawgit.com/slashiee/cemu_graphic_packs/master/Source/"+fetchPath, {cache:'force-cache'}).then(response => response.text()).then(out => {
+		lines = out.split('\n');
+    	for(line = 0; line < lines.length; line++){
+    		if (lines[line].startsWith("name =")) {
+				newLi = document.createElement('li');
+				newLi.innerText=lines[line].split(' - ')[0].split('name = "')[1];
+				newLi.onclick = function(){interpretGraphicPack(fetchPath.split("/")[0], document.getElementById("heightInput").value, document.getElementById("widthInput").value);};
+				document.getElementsByTagName("ul")[0].appendChild(newLi);
+				break;
+        	}
+    	}
+    });
+}
+
+fetch("https://api.github.com/repos/slashiee/cemu_graphic_packs/git/trees/master:Source?recursive=1", {cache:'force-cache'}).then(response => response.json()).then(resJson => {
+	var gamesList = document.getElementsByTagName("ul")[0];
+	gamesList.innerHTML="";
+	for (i = 0; i < resJson.tree.length; i++) {
+		if (resJson.tree[i].type=="blob" && resJson.tree[i].path.split("/").pop() == "rules.txt") { // Provide alternative content as placeholder
+			fetchFile(resJson.tree[i].path);
+		}
+	}
+});
 		</script>
       <div id="credits" style="font-size: 0.7vw;">
       </div>
