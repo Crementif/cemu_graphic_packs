@@ -83,6 +83,25 @@
           document.getElementById("credits").innerHTML=creditsText;
         })
         </script>
+		<script>
+			fetch("https://api.github.com/repos/slashiee/cemu_graphic_packs/git/trees/master:Source?recursive=1", {cache:'force-cache'}).then(response => response.json()).then(resJson => {
+				var gamesList = document.getElementsByTagName("ul")[0];
+				gamesList.innerHTML="";
+				for (i = 0; i < resJson.tree.length; i++) {
+					if (resJson.tree[i].type=="blob" && resJson.tree[i].path.split("/").pop() == "rules.txt") { // Provide alternative content as placeholder
+						fetch("https://cdn.rawgit.com/slashiee/cemu_graphic_packs/master/Source/"+resJson.tree[i].path, {cache:'force-cache'}).then(response => response.text()).then(out => {
+							lines = resJson.split('\n');
+    						for(line = 0; line < lines.length; line++){
+      							if (lines[line].startsWith("name =")) {
+									gamesList.innerHTML+="<li>"+lines[line].split(' - ')[0].split('name = "')[1]+"</li>";
+									break;
+                				}
+    						}
+            			});
+					}
+				}
+			});
+		</script>
       <div id="credits" style="font-size: 0.7vw;">
       </div>
 
