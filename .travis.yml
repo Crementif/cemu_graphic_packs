@@ -4,9 +4,8 @@
 
 language: php
 
-# Use the latest stable release
 php:
-  - 7.2.5
+  - 7.0
 
 git:
   depth: 1
@@ -29,7 +28,7 @@ before_deploy:
   - mv $TRAVIS_BUILD_DIR/Performance/* buildCommon
   - mv $TRAVIS_BUILD_DIR/Quality/* buildCommon
   - mv $TRAVIS_BUILD_DIR/Workaround/* buildCommon
-  - zip -o -9 -r -b graphicPacks_$TRAVIS_BUILD_NUMBER.zip buildcommon/*
+  - zip -o -9 -r graphicPacks_$TRAVIS_BUILD_NUMBER.zip buildCommon
 
 deploy:
   provider: releases
