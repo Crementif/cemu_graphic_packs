@@ -23,13 +23,13 @@ script: ./build.sh
 
 before_deploy:
   - mkdir buildCommon
-  - mv $TRAVIS_BUILD_DIR\Enhancement\* buildCommon
-  - mv $TRAVIS_BUILD_DIR\Enthusiast\* buildCommon
-  - mv $TRAVIS_BUILD_DIR\Modifications\* buildCommon
-  - mv $TRAVIS_BUILD_DIR\Performance\* buildCommon
-  - mv $TRAVIS_BUILD_DIR\Quality\* buildCommon
-  - mv $TRAVIS_BUILD_DIR\Workaround\* buildCommon
-  - zip -o -9 -r -b graphicPacks_$TRAVIS_BUILD_NUMBER.zip buildcommon\*
+  - mv $TRAVIS_BUILD_DIR/Enhancement/* buildCommon
+  - mv $TRAVIS_BUILD_DIR/Enthusiast/* buildCommon
+  - mv $TRAVIS_BUILD_DIR/Modifications/* buildCommon
+  - mv $TRAVIS_BUILD_DIR/Performance/* buildCommon
+  - mv $TRAVIS_BUILD_DIR/Quality/* buildCommon
+  - mv $TRAVIS_BUILD_DIR/Workaround/* buildCommon
+  - zip -o -9 -r -b graphicPacks_$TRAVIS_BUILD_NUMBER.zip buildcommon/*
 
 deploy:
   provider: releases
