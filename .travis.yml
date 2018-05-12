@@ -45,7 +45,7 @@ before_deploy:
   # Add release tag
   - git config --local user.name "Crementif"
   - git config --local user.email "<>"
-  - git tag "Travis$TRAVIS_BUILD_NUMBER-(git log --format=%h -1)"
+  - git tag "$(date +'%Y%m%d%H')-$(git log --format=%h -1)"
   # - git push "ssh://$GithubToken@github.com/$TRAVIS_REPO_SLUG" --tags > /dev/null 2>&1
   # Create zip file
   - mkdir build
