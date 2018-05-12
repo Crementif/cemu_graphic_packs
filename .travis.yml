@@ -14,13 +14,17 @@ git:
 branches:
   only: master
 
+addons:
+  apt:
+    update: false
+
 # Simultaneous builds for common and uncommon resolutions
 env:
   - buildType = Common
   - buildType = Uncommon
 
-#matrix:
-#  fast_finish: true
+matrix:
+  fast_finish: true
 
 # === Build steps ===
 
@@ -31,7 +35,7 @@ install: true
 before_script:
   - phpenv config-rm xdebug.ini
 
-script: ./build.sh $buildType
+script: ./build.sh "$buildType"
 
 before_deploy:
   # Add release tag
@@ -39,7 +43,7 @@ before_deploy:
   - git config --local user.email "<>"
   - git tag "Travis$-$(git log --format=%h -1)"
   # Create zip file
-  - mkdir buildCommon
+  - mkdir build
   - mv $TRAVIS_BUILD_DIR/Enhancement/* build
   - mv $TRAVIS_BUILD_DIR/Enthusiast/* build
   - mv $TRAVIS_BUILD_DIR/Modifications/* build

@@ -6,6 +6,8 @@ RED='\033[0;31m'
 
 NC='\033[0m' # Removes Color
 
+echo -e "\t${RED}Building $1 resolutions of the graphic packs.\n\n\n"
+
 baseOutDir=$1
 if [ -n "$baseOutDir" ]; then
         if [ ! -d "$baseOutDir" ]; then
