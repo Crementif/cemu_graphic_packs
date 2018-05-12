@@ -85,7 +85,8 @@ std_respack () {
 	gameName=$1
 	params=( "$@" )
 	rest=( "${params[@]:1}" )
-	echo -en "${GREEN}[Building] ${BCYAN}$gameName ${NC}for ${rest[@]}" && echo -e "travis_fold:start:$gameName"
+	echo -e "${GREEN}[Building] ${BCYAN}$gameName ${NC}for ${rest[@]}"
+	echo -e "travis_fold:start:$gameName"
 	for arrg in "${rest[@]}"
 	do
 		resvarname="res_${arrg}[@]"
@@ -104,12 +105,12 @@ std_respack () {
 			#height="${subparams[1]}"
 			#echo "$arrg w: $width h: $height inFolder: $inFolder outFolder: $outFolder"
 			build_dir "$inFolder" "$outFolder" "${subparams[@]}"
-			echo -e "travis_fold:end:$gameName"
 		elif [ -n "$arrg" ]; then #only if requested resolution name not empty (which happens when you remove array elem naively)
 			echo -e "${RED}$arrg resolution not defined, define it in build.sh"
 			exit 1
 		fi
 	done
+	echo -e "travis_fold:end:$gameName"
 }
 
 mod_onearg () {
