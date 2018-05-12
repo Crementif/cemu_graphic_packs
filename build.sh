@@ -43,8 +43,10 @@ build_dir () {
 		echo -en 'travis_fold:end:script.1\\r'
 }
 
+res_240p=( "Performance" 426 240 )
 res_360p489=( "Performance" 1920 360 )
 res_360p=( "Performance" 640 360 )
+res_420p=( "Performance" 854 480 )
 res_480p489=( "Performance" 2562 480 )
 res_480p=( "Performance" 854 480 )
 res_540p219=( "Performance" 1280 540 )
