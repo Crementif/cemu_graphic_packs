@@ -11,32 +11,49 @@ git:
   depth: 1
   submodules: false
 
+branches:
+  only: master
+
+# Simultaneous builds for common and uncommon resolutions
+env:
+  - buildType = Common
+  - buildType = Uncommon
+
+#matrix:
+#  fast_finish: true
+
+# === Build steps ===
+
 # No dependencies
 install: true
 
-# No need to debug the PHP code.
+# No need to debug the PHP code. Would slow down execution
 before_script:
   - phpenv config-rm xdebug.ini
 
-script: ./build.sh
+script: ./build.sh $buildType
 
 before_deploy:
+  # Add release tag
+  - git config --local user.name "cemu_graphic_packs"
+  - git config --local user.email "<>"
+  - git tag "Travis$-$(git log --format=%h -1)"
+  # Create zip file
   - mkdir buildCommon
-  - mv $TRAVIS_BUILD_DIR/Enhancement/* buildCommon
-  - mv $TRAVIS_BUILD_DIR/Enthusiast/* buildCommon
-  - mv $TRAVIS_BUILD_DIR/Modifications/* buildCommon
-  - mv $TRAVIS_BUILD_DIR/Performance/* buildCommon
-  - mv $TRAVIS_BUILD_DIR/Quality/* buildCommon
-  - mv $TRAVIS_BUILD_DIR/Workaround/* buildCommon
-  - zip -o -9 -r graphicPacks_$TRAVIS_BUILD_NUMBER.zip buildCommon
+  - mv $TRAVIS_BUILD_DIR/Enhancement/* build
+  - mv $TRAVIS_BUILD_DIR/Enthusiast/* build
+  - mv $TRAVIS_BUILD_DIR/Modifications/* build
+  - mv $TRAVIS_BUILD_DIR/Performance/* build
+  - mv $TRAVIS_BUILD_DIR/Quality/* build
+  - mv $TRAVIS_BUILD_DIR/Workaround/* build
+  - cd build
+  - zip -o -9 -r -q ../graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip ./*
 
 deploy:
   provider: releases
   api_key:
     secure: wYawDRV2/4pRnpojCMSz8iZOvyM+eRpwLIGZnq2Omiu9Z64A5/ybOjwFxGo85PIQjMtNH8VkToQ5NVdrfVO0M4rZlozFkrDpVp+Zc3zlwjoZ3O6DKLLT6n+3fEJbWyL5f8wTwqw+GHVYXG8sPRATQ820Hh29O4vsTbwh7wjHB6dBU4RUjcoUC23eg61TRalpWlsyBlwsPPUJ6NKantzkGnk6xhe0i9ChNOw2DRS6WMZLdb5Fh+ScAGt5GtxxvIehWlSmuG2cYhu3r1IKxoW51PWpC0A4x/E92SrchyrEm1de9RYdy1Pawp9Y75r/cNsjLqSvd2vdd0hhwJ8Snl6Sn1TmbHAH0HlttH9D5+CKDUj1QVWT0jKDnJuvZ040Hd+6Ncd5tmz7ZtouwlaJkdFI18kKKtrgUdYfV3qFevcceQ5rjMNYFeaJ2f/Zdjy+lqoYZk5R2Mk4RWDTfQiBNdKrIOg7knbrn9i1LikxtVeUOh+LJ300sCTk84/BZT/ejc6/89Cs6JI7DYX2EiVtYQAfA+ttsznZKb7DRwoqfcmMevFmB9oCqDDQ6TNI7UOoN4Q5CS+fXpcsq9NmxcZTuifr+x2jEYv6c01UYQmXgAObeyT8MONC5LTQ8ZOAv4jrEMCcMN60jck/lqESETPWZrm8AHv5C2WtLHckYG6FqAA8KF8=
-  file: 
-    - "graphicPacks_$TRAVIS_BUILD_NUMBER.zip"
-    - "graphicPacksUncommon_$TRAVIS_BUILD_NUMBER.zip"
+  file: "graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip"
   skip_cleanup: true
   on:
     repo: Crementif/cemu_graphic_packs
