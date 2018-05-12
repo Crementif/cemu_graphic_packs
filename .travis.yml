@@ -35,7 +35,7 @@ install: true
 before_script:
   - phpenv config-rm xdebug.ini
 
-script: ./build.sh "$buildType"
+script: ./build.sh
 
 before_deploy:
   # Add release tag

@@ -6,7 +6,7 @@ RED='\033[0;31m'
 
 NC='\033[0m' # Removes Color
 
-echo -e "\t${RED}Building $1 resolutions of the graphic packs.\n\n\n"
+echo -e "\t${RED}Building $buildType resolutions of the graphic packs.\n\n\n"
 
 baseOutDir=$1
 if [ -n "$baseOutDir" ]; then
@@ -130,7 +130,7 @@ mod_onearg () {
     done
 }
 
-if [ "$1" = "Common" ]; then
+if [ "$buildType" = "Common" ]; then
         res16by9=( "360p" "480p" "540p" "720p" "900p" "1080p" "1440p" "2160p" "2880p" )
         res21by9=( "720p219" "1080p219" "1440p219" "2160p219" "2880p219" )
         just720p=( "720p" )
