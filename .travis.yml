@@ -25,6 +25,7 @@ addons:
 env:
   - buildType=Common
   - buildType=Uncommon
+  #secure:
 
 matrix:
   fast_finish: true
@@ -42,10 +43,10 @@ script: ./build.sh
 
 before_deploy:
   # Add release tag
-  - git config --local user.name "cemu_graphic_packs"
+  - git config --local user.name "Crementif"
   - git config --local user.email "<>"
-  - git tag "Travis$-$(git log --format=%h -1)"
-  - git push --tags
+  # - git tag "Travis$-$TRAVIS_BUILD_NUMBER-(git log --format=%h -1)"
+  # - git push "ssh://$GithubToken@github.com/$TRAVIS_REPO_SLUG" --tags > /dev/null 2>&1
   # Create zip file
   - mkdir build
   - mv $TRAVIS_BUILD_DIR/Enhancement/* build
