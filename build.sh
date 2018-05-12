@@ -16,6 +16,8 @@ if [ -n "$baseOutDir" ]; then
         fi
 fi
 
+echo printenv
+
 build_dir () {
         srcDir=$1
         dstDir=$2

@@ -20,8 +20,8 @@ addons:
 
 # Simultaneous builds for common and uncommon resolutions
 env:
-  - buildType = Common
-  - buildType = Uncommon
+  - buildType=Common
+  - buildType=Uncommon
 
 matrix:
   fast_finish: true
