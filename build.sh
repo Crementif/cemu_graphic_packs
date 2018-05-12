@@ -85,8 +85,8 @@ std_respack () {
 	gameName=$1
 	params=( "$@" )
 	rest=( "${params[@]:1}" )
-	echo -e "${GREEN}[Building] ${BCYAN}$gameName ${NC}for ${rest[@]}"
 	echo -e "travis_fold:start:$gameName"
+	echo -e "${GREEN}[Building] ${BCYAN}$gameName ${NC}for ${rest[@]}"
 	for arrg in "${rest[@]}"
 	do
 		resvarname="res_${arrg}[@]"
