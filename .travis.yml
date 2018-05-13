@@ -50,6 +50,7 @@ before_deploy:
   - mv $TRAVIS_BUILD_DIR/Workaround/* build
   - cd build
   - zip -o -9 -r -q ../graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip ./*
+  - cd ..
 
 after_success:
   - |
@@ -59,4 +60,4 @@ after_success:
       --tag="Travis$TRAVIS_BUILD_NUMBER" \
       --name="Graphic Packs: version $TRAVIS_BUILD_NUMBER" \
       --body="$(git log -1 --format='Commited at %ci by **%cn** in commit %h%n### %s%n```%n%b%n```')" \
-      "graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip"
+      "graphicPacks$buildType""_$TRAVIS_BUILD_NUMBER"".zip"
