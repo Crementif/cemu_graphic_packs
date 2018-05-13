@@ -25,7 +25,6 @@ addons:
 env:
   - buildType=Common
   - buildType=Uncommon
-  #secure:
 
 matrix:
   fast_finish: true
@@ -45,7 +44,7 @@ before_deploy:
   # Add release tag
   - git config --local user.name "Crementif"
   - git config --local user.email "<>"
-  - git tag "Travis$TRAVIS_BUILD_NUMBER" "$(git log --format=%h -1)"
+  - git tag "Travis$TRAVIS_BUILD_NUMBER-$(git log --format=%h -1)"
   # Create zip file
   - mkdir build
   - mv $TRAVIS_BUILD_DIR/Enhancement/* build
@@ -65,4 +64,4 @@ deploy:
   file: "graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip"
   skip_cleanup: true
   on:
-    tags: true
+    tags: false
