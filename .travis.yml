@@ -41,6 +41,7 @@ before_script:
 script: ./build.sh
 
 before_deploy:
+  - npm --version
   # Add release tag
   - git config --local user.name "Crementif"
   - git config --local user.email "<>"
