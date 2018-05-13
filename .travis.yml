@@ -17,10 +17,6 @@ branches:
   except:
     - /build-.+-\d{4}-\d{2}-\d{2}-.*/
 
-addons:
-  apt:
-    update: false
-
 # Simultaneous builds for common and uncommon resolutions
 env:
   - buildType=Common
@@ -32,7 +28,7 @@ matrix:
 # === Build steps ===
 
 # No dependencies
-install: true
+install: npm install -g github-release-cli
 
 # No need to debug the PHP code. Would slow down execution
 before_script:
@@ -41,11 +37,6 @@ before_script:
 script: ./build.sh
 
 before_deploy:
-  - npm --version
-  # Add release tag
-  - git config --local user.name "Crementif"
-  - git config --local user.email "<>"
-  - git tag "Travis$TRAVIS_BUILD_NUMBER" "$(git log --format=%h -1)"
   # Create zip file
   - mkdir build
   - mv $TRAVIS_BUILD_DIR/Enhancement/* build
@@ -57,12 +48,12 @@ before_deploy:
   - cd build
   - zip -o -9 -r -q ../graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip ./*
 
-deploy:
-  name: "Graphic Packs: version $TRAVIS_BUILD_NUMBER"
-  provider: releases
-  api_key:
-    secure: DyOaLZprRCfE21m135cwmTsVMoAoGw32P102Z3bL/tpONBTVde8OJxN73SPoaegR8jamQz36PEeD8CKl7VTiRKYIOr0PB4BJqW1zYoph2TWcE2jcDyzoYlUdmxHc1S+aHIQ6jz4I0Dm5HoX2AY0MFIGEJ5YmHvNhWuZVo/YqNHBIOzNKuwomkToz+kqP7MI5ZliVrgI26TU5xRcxTM6xII8s7SVFGNTmFCBEsp4M99cw23iUPP+DBjUm+oqZQx8dJT/bx5pKBLv1Stm1wJUx4D26Fh0EsFizVRIRTdyxsutvgp/h9Nxw3vgLIHGcwdH2kmeWrtr1//b2oZtHATKV77/hqKR1XJZwGOmHCE1IbiZy53ID0G4ICaQjPdtnYw33+ZVVUJD19BHmLtECOKiyWvWMgqHTGOfQ8M9kRjMiZkA8MhTGQRaFGpDH51C1XEMOxsEYTbcQ0XCdxHRwW36C4SzAeoJKzauS6QYI0so/XEf40bSsGtjmo5EWowrRUddfhverAei8IDCg3nBGVB62Rbx91j6E3isB7Uyd3XDf9tv5dRb5kOFPBvTTNSA2hJOzis5FSsM3qUM6XVaOYmQSj/+7dfGfqYRZ6ra+vMP8bdIGE8puHFAu9TdRRFA3Yr/Bf1vf3KGx1XapMVkjl6OBeuhhOXgxmshUmaUCRqLD7aQ=
-  file: "graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip"
-  skip_cleanup: true
-  on:
-    tags: false
+after_success:
+  - |
+    github-release upload \
+      --owner=Crementif \
+      --repo=cemu_graphic_packs \
+      --tag="Travis$TRAVIS_BUILD_NUMBER" \
+      --name="Graphic Packs: version $TRAVIS_BUILD_NUMBER" \
+      --body="$(git log -1 --format='Commited at %ci by **%cn** in commit %h%n### %s%n```%n%b%n```')" \
+      "graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip"
