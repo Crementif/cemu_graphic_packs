@@ -1,6 +1,5 @@
 # Aim to have fast builds
-# TODO: Don't build the files into seperate folders and copy them after that anyway.
-# TODO: Stage another download (parallel) that contains uncommon resolutions.
+# TODO: Maybe don't build the files into seperate folders and copy them after that anyway.
 
 language: php
 
@@ -51,7 +50,6 @@ after_success:
   - cd build
   - zip -o -9 -r -q "../graphicPacks$buildType""_$TRAVIS_BUILD_NUMBER"".zip" ./*
   - cd ..
-  - ls
   # Create github release
   - |
     github-release upload \

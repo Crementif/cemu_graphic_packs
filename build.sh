@@ -6,7 +6,7 @@ RED='\033[0;31m'
 
 NC='\033[0m' # Removes Color
 
-echo -e "\t${RED}Building $buildType resolutions of the graphic packs.\n\n\n"
+echo -e "${RED}Building $buildType resolutions of the graphic packs.\n"
 
 baseOutDir=$1
 if [ -n "$baseOutDir" ]; then
@@ -117,7 +117,7 @@ mod_onearg () {
     params=( "$@" )
     subparams=( "${params[@]:1}" ) 
     mod_folder="${params[0]}"
- 
+	echo -e "travis_fold:start:$mod_folder"
     echo -e "${GREEN}[Building] ${BCYAN}$mod_folder ${NC}with arguments: ${subparams[@]}"
     for arrg in "${subparams[@]}"
     do
@@ -128,15 +128,12 @@ mod_onearg () {
             #echo "${arrg} inFolder: $inFolder outFolder: $outFolder"
             build_dir "$inFolder" "$outFolder" "$arrg"
     done
+	echo -e "travis_fold:end:$mod_folder"
 }
 
-#
-#         res16by9=( "360p" "480p" "540p" "720p" "900p" "1080p" "1440p" "2160p" "2880p" )
-#        res21by9=( "720p219" "1080p219" "1440p219" "2160p219" "2880p219" )
-#
-#
 if [ "$buildType" = "Common" ]; then
-        res16by9=( "360p" "720p" "1080p" "2880p" )
+        res16by9=( "480p" "720p" "900p" "1080p" "1440p" "2160p" "2880p" )
+        res21by9=( "720p219" "1080p219" "1440p219" "2160p219" "2880p219" )
         just720p=( "720p" )
         just1080p=( "1080p" )
     else
