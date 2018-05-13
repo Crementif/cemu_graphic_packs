@@ -44,7 +44,7 @@ before_deploy:
   # Add release tag
   - git config --local user.name "Crementif"
   - git config --local user.email "<>"
-  - git tag "Travis$TRAVIS_BUILD_NUMBER-$(git log --format=%h -1)"
+  - git tag "Travis$TRAVIS_BUILD_NUMBER" "$(git log --format=%h -1)"
   # Create zip file
   - mkdir build
   - mv $TRAVIS_BUILD_DIR/Enhancement/* build
