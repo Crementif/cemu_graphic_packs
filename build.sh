@@ -136,7 +136,7 @@ mod_onearg () {
 #
 #
 if [ "$buildType" = "Common" ]; then
-        res16by9=( "720p" "1080p" )
+        res16by9=( "360p" "720p" "1080p" "2880p" )
         just720p=( "720p" )
         just1080p=( "1080p" )
     else
