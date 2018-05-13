@@ -49,8 +49,9 @@ after_success:
   - mv $TRAVIS_BUILD_DIR/Quality/* build
   - mv $TRAVIS_BUILD_DIR/Workaround/* build
   - cd build
-  - zip -o -9 -r -q ../graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip ./*
+  - zip -o -9 -r -q "../graphicPacks$buildType""_$TRAVIS_BUILD_NUMBER"".zip" ./*
   - cd ..
+  - ls
   # Create github release
   - |
     github-release upload \
