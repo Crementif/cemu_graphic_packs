@@ -39,7 +39,7 @@ before_script:
 
 script: ./build.sh
 
-before_deploy:
+after_success:
   # Create zip file
   - mkdir build
   - mv $TRAVIS_BUILD_DIR/Enhancement/* build
@@ -51,8 +51,7 @@ before_deploy:
   - cd build
   - zip -o -9 -r -q ../graphicPacks$buildType_$TRAVIS_BUILD_NUMBER.zip ./*
   - cd ..
-
-after_success:
+  # Create github release
   - |
     github-release upload \
       --owner=Crementif \
