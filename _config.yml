@@ -1,0 +1,16 @@
+title: Cemu Graphic Packs
+description: Official website of the Community Graphic Packs for Cemu, used to upscale and change your Wii U games.
+url: https://Crementif.github.io/cemu_graphic_packs/
+repository: Crementif/cemu_graphic_packs
+
+author:
+  name: Slashiee + awesome contributors
+
+collections:
+  - FAQ
+
+exclude:
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
+  - watch_local.bat
