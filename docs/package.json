@@ -1,0 +1,19 @@
+{
+  "name": "cemu-graphic-packs-builder",
+  "version": "1.0.0",
+  "description": "Builds the website and graphic packs",
+  "main": "build.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Crementif/cemu_graphic_packs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Crementif/cemu_graphic_packs/issues"
+  },
+  "homepage": "https://github.com/Crementif/cemu_graphic_packs#readme",
+  "dependencies": {
+    "fs-extra": "^7.0.1"
+  }
+}
