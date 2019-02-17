@@ -1,5 +1,5 @@
 [build]
 base = "docs"
-command = "node build-docs.js"
+command = "node build-all.js"
 publish = "docs/publish"
 environment = { NODE_VERSION = "11.9.0" }
