@@ -1,6 +1,5 @@
 const fse = require("fs-extra");
 const path = require("path");
-const ini = require("ini");
 
 async function buildAll(buildPathArg, outputPathArg) {
 	let buildPath = path.normalize(buildPathArg);
