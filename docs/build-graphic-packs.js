@@ -100,16 +100,19 @@ function parseRules(rulesContent) {
 		
 		EmptyComments: false, // Empty comments are just junk.
 		DoubleSlashComments: false, // These shouldn't exist! Cemu ignores them currently on blank lines, but these should be removed.
-		DoubleHashComments: false, // Two comments on 1 line isn't necessary a bad thing, but it's easy to log.
+		
+		DoubleHashComments: false, // Two comments on 1 line isn't necessary a bad thing, but it's easy to log. Might disable output in the future.
+		WhitespaceTrimmedInLine: false, // Doesn't really hurt quality, but it's just logging.
 	};
 	// Test if all presets are valid and don't contain inconsistent presets.
 	let rulesLines = rulesContent.split("\n");
 	
 	let currSection = undefined;
 	for (let i=0; i<rulesLines.length; i++) {
-		// Ignore comment contents
+		// Deal with comments (and whitespace)
 		let seperateLines = rulesLines[i].split("#");
-		let cleanLine = seperateLines[0];
+		let cleanLine = seperateLines[0].trim();
+		if (seperateLines[0] === seperateLines[0] && seperateLines.length !== 2/*Whitespace rule is ignored on lines with comments*/)
 		if (seperateLines.length === 2) {
 			if (seperateLines[1].trim() === "") parsedQualityReport.EmptyComments = true;
 			else if (seperateLines[1].includes("=")) {
@@ -117,8 +120,9 @@ function parseRules(rulesContent) {
 			}
 		}
 		if (seperateLines.length >= 3) parsedQualityReport.DoubleHashComments = true;
+		if (cleanLine.includes("//")) parsedQualityReport.DoubleSlashComments = true;
+		// Do the rules parsing
 	}
-	if (parsedQualityReport.EmptyComments) console.log("JUINKK");
 }
 
 function mainFunction() {
