@@ -16,9 +16,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: Zip all packs
-      run: |
-        cd GITHUB_WORKSPACE |
-        ls
+      run: ls
     - name: Create new release
       if: github.event == 'push'
       run: echo Create a github release with the zip
