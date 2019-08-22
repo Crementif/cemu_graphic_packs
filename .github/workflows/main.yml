@@ -23,7 +23,7 @@ jobs:
         cd Mods && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
         cd Workarounds && zip -r -q -9 "../graphicPacks.zip" ./* && cd ..
     - name: Create new release
-      if: github.event == 'push'
+#      if: github.event == 'push'
       run: |
         RELEASENUMBER=$(git describe --tags) |
         echo The title of this release should be $RELEASENUMBER
