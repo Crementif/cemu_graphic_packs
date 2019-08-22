@@ -14,7 +14,7 @@ jobs:
     # Clone latest copy of repository
     - uses: actions/checkout@v1
       with:
-        fetch-depth: 1
+        fetch-depth: 10
     - name: Zip all packs
       run: |
         cd $GITHUB_WORKSPACE |
