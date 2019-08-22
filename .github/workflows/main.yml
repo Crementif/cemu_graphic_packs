@@ -16,7 +16,11 @@ jobs:
       with:
         fetch-depth: 1
     - name: Zip all packs
-    - run: cd Enhancements && zip -r -q -9 "../graphicPacks.zip" ./* && cd ..
+      run: |
+        cd Enhancements && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
+        cd Resolutions && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
+        cd Mods && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
+        cd Workarounds && zip -r -q -9 "../graphicPacks.zip" ./* && cd ..
     - name: Create new release
       if: github.event == 'push'
       run: echo Create a github release with the zip
