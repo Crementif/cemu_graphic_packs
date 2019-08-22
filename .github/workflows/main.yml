@@ -24,4 +24,6 @@ jobs:
         cd Workarounds && zip -r -q -9 "../graphicPacks.zip" ./* && cd ..
     - name: Create new release
       if: github.event == 'push'
-      run: echo Create a github release with the zip
+      run: |
+        RELEASENUMBER=$(git describe --tags) |
+        echo The title of this release should be $RELEASENUMBER
