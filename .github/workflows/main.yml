@@ -1,0 +1,26 @@
+name: BuildGraphicPacks
+
+# Don't bother creating releases in some cases
+on: [push, pull_request]
+
+jobs:
+  build:
+    # Configuration
+    runs-on: ubuntu-latest
+    name: Build
+    
+    # Build script
+    steps:
+    # Clone latest copy of repository
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: Zip all packs
+      run: |
+        cd Enhancements && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
+        cd Resolutions && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
+        cd Mods && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
+        cd Workarounds && zip -r -q -9 "../graphicPacks.zip" ./* && cd ..
+    - name: Create new release
+      if: github.event == 'push'
+      run: echo Create a github release with the zip
