@@ -23,6 +23,8 @@ jobs:
         cd Mods && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
         cd Workarounds && zip -r -q -9 "../graphicPacks.zip" ./* && cd ..
     - name: Create new release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #      if: github.event == 'push'
       run: |
         RELEASE_NUMBER="$(($(curl -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest" | jq -r ".name" | cut -c 22-)+1))" ;
