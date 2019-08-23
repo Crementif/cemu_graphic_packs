@@ -1,17 +1,7 @@
 name: Build Graphic Packs
 
 # Don't bother creating releases in some cases
-on:
-  push:
-    branches:
-    - !gh-pages
-    paths:
-    - !docs
-  pull_request:
-    branches:
-    - !gh-pages
-    paths:
-    - !docs
+on: [push, pull_request]
 
 jobs:
   build:
