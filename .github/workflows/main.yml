@@ -25,5 +25,5 @@ jobs:
     - name: Create new release
 #      if: github.event == 'push'
       run: |
-        RELEASENUMBER=$(curl -s 'https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest' | jq -r '.name')
+        RELEASENUMBER=$(curl -s 'https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest') #| jq -r '.name'
         echo The title of this release should be $RELEASENUMBER
