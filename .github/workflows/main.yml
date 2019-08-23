@@ -1,7 +1,16 @@
 name: Build Graphic Packs
 
 # Don't bother creating releases in some cases
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    paths:
+    - Enhancements
+    - Resolutions
+    - Mods
+    - Workarounds
 
 jobs:
   build:
