@@ -4,9 +4,11 @@ name: Build Graphic Packs
 on:
   push:
     branches:
+    - !*
     - master
   pull_request:
     paths:
+    - !*
     - Enhancements
     - Resolutions
     - Mods
