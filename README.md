@@ -13,3 +13,4 @@ Graphic packs that modify game files can be found [here](https://github.com/slas
 
 ### Downloads
 The latest downloads are **always** found on our [website](https://slashiee.github.io/cemu_graphic_packs/)!
+
