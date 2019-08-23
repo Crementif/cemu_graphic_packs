@@ -24,4 +24,5 @@ jobs:
         cd Workarounds && zip -r -q -9 "../graphicPacks.zip" ./* && cd ..
     - name: Create new release
 #      if: github.event == 'push'
-      run: echo $(curl -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest")
+      run: |
+      echo $(curl -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest" | jq -r ".name")
