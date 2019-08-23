@@ -1,6 +1,6 @@
-name: Build Graphic Packs
+name: Build Process
 
-# Don't bother creating releases in some cases
+# Don't try to build other branches then master or when a pull request changes something outside of the graphic packs source folders.
 on:
   push:
     branches:
@@ -16,7 +16,7 @@ jobs:
   build:
     # Configuration
     runs-on: ubuntu-latest
-    name: Build
+    name: Build Graphic Packs
     
     # Build script
     steps:
