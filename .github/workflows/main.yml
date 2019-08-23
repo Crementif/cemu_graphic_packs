@@ -29,4 +29,5 @@ jobs:
       run: |
         RELEASE_NUMBER="$(($(curl -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest" | jq -r ".name" | cut -c 22-)+1))" ;
         echo "Release number will be $RELEASE_NUMBER !" |
-        export=$(jq -n --arg releaseTag "Github$RELEASE_NUMBER" --arg releaseTitle "Cemu Graphic Packs: V$RELEASE_NUMBER" --arg releaseBody "$(git log -1 --format='Commited at %ci by **%cn** in commit %h%n### %s%n```%n%b%n```%n')" '{"tag_name":$releaseTag,"target_commitish": "master","name": $releaseTitle,"body": $releaseBody,"draft": false,"prerelease": false}') ; curl -i -X POST -H 'Content-Type:application/json' -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" -d "$export"
+        jq -n --arg releaseTag "Github$RELEASE_NUMBER" --arg releaseTitle "Cemu Graphic Packs: V$RELEASE_NUMBER" --arg releaseBody "$(git log -1 --format='Commited at %ci by **%cn** in commit %h%n### %s%n```%n%b%n```%n')" '{"tag_name":$releaseTag,"target_commitish": "master","name": $releaseTitle,"body": $releaseBody,"draft": false,"prerelease": false}' > releaseBody.json |
+        curl -i -X POST -H 'Content-Type:application/json' -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" --data-binary "@releaseBody.json"
