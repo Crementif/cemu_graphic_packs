@@ -17,16 +17,17 @@ jobs:
         fetch-depth: 1
     - name: Zip all packs
       run: |
-        cd $GITHUB_WORKSPACE |
-        cd Enhancements && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
-        cd Resolutions && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
-        cd Mods && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. |
+        cd $GITHUB_WORKSPACE ;
+        cd Enhancements && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. ;
+        cd Resolutions && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. ;
+        cd Mods && zip -r -q -9 "../graphicPacks.zip" ./* && cd .. ;
         cd Workarounds && zip -r -q -9 "../graphicPacks.zip" ./* && cd ..
     - name: Create new release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #      if: github.event == 'push'
       run: |
+        cd $GITHUB_WORKSPACE ;
         RELEASE_NUMBER="$(($(curl -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest" | jq -r ".name" | cut -c 22-)+1))" ;
         echo "Release number will be $RELEASE_NUMBER !" ;
         jq -n --arg releaseTag "Github$RELEASE_NUMBER" --arg releaseTitle "Cemu Graphic Packs: V$RELEASE_NUMBER" --arg releaseBody "$(git log -1 --format='Commited at %ci by **%cn** in commit %h%n### %s%n```%n%b%n```%n')" '{"tag_name":$releaseTag,"target_commitish": "master","name": $releaseTitle,"body": $releaseBody,"draft": false,"prerelease": false}' > releaseBody.json ;
